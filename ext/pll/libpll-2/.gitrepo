@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/xflouris/libpll-2.git
+	branch = dev_nobison
+	commit = 71bd6571be768b5e15c029b45ba9d5e259def419
+	parent = 1eb5c6959ecdd6bdba19bd4c34d563382d46c471
+	cmdver = 0.4.0
+	method = merge

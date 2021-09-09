@@ -1,0 +1,20 @@
+# Treerecs – Copyright © by INRIA – All rights reserved – 2017
+# By Nicolas Comte.
+
+# Build files
+build*
+cmake-build-*
+examples/etannier
+
+# Bpp libraries
+bpp/include/*
+bpp/sources/*
+bpp/lib/*
+
+# Doxygen files
+html/*
+
+#other
+.idea/*
+tests/gtest/*
+src/ext/bpp/*

@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/ddarriba/pll-modules.git
+	branch = dev_nobison
+	commit = fd57277d5323aa73df2d11a598dade7f558a6d75
+	parent = 76e351d452cbac6f78fa72db7a75b8c951e23bb9
+	cmdver = 0.4.0
+	method = merge
