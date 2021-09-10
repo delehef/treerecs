@@ -202,7 +202,7 @@ namespace bpp
         write(tree, output);
         output.close();
       }
-      catch (IOException e)
+      catch (IOException &e)
       {
         std::stringstream ss ;
         ss << e.what() <<"\nProblem writing tree to file "<< path <<"\n Is the file path correct and do \
