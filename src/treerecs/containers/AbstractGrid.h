@@ -511,7 +511,6 @@ void AbstractGrid<T, rowKey, colKey>::_removeRow(const std::size_t i) {
     this->nrow_ -= 1;
   }
   if(this->nrow_ == 0) this->ncol_ = 0;
-  assert(nrow_ >= 0);
 }
 
 template <typename T, typename rowKey, typename colKey>
@@ -529,7 +528,6 @@ void AbstractGrid<T, rowKey, colKey>::_removeCol(const std::size_t i) {
   else if(this->ncol_ == 1){
     this->clear();
   }
-  assert(ncol_ >= 0);
 }
 
 template<typename T, typename rowKey, typename colKey>
