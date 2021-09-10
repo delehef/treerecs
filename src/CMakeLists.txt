@@ -13,15 +13,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Specify C++14
+# Specify C++17
 include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG(-std=c++14 CXX_STANDARD_14_SUPPORT)
-if(CXX_STANDARD_14_SUPPORT)
-  set(CMAKE_CXX_STANDARD 14)
+CHECK_CXX_COMPILER_FLAG(-std=c++17 CXX_STANDARD_17_SUPPORT)
+if(CXX_STANDARD_17_SUPPORT)
+  set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
 else()
-  message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
+  message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
 endif()
 
 # Export variables as CACHE entries

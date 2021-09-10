@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 #include <cstdlib>
 #include <cstring>
+#include <optional>
 
 #include <iostream>
 #include <fstream>
@@ -123,6 +124,14 @@ int main(int argc, char* argv[]) {
   if (params->alignments_filename.size() and
       not IO::exists(params->alignments_filename)) {
     std::cerr << "Error: " << params->alignments_filename
+              << " does not exist." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  // Check that the provided distance matrix file exists
+  if (params->dmatrix_filename.size() and
+      not IO::exists(params->dmatrix_filename)) {
+    std::cerr << "Error: " << params->dmatrix_filename
               << " does not exist." << std::endl;
     exit(EXIT_FAILURE);
   }
@@ -395,36 +404,29 @@ int main(int argc, char* argv[]) {
 
         root_tree = true;
       }
+      auto dmatrix = params->dmatrix_filename.size() > 0 ? std::optional<std::string>{params->dmatrix_filename} : std::nullopt;
 
       TreeReconciliationConductor treesReconciliationConductor; // conducts all operations of rearrangments/reconciliation/rerooting
       auto solutions_for_one_tree_and_one_threshold =
           treesReconciliationConductor(
-              *genetrees.at(
-                  gtree_index) // original gene tree to reconcile/reconstuct.
+              *genetrees.at(gtree_index) // original gene tree to reconcile/reconstuct.
               , *speciestree // speciestree as guide tree.
-              , genemaps.at(
-                  gtree_index) // map to link species nodes with gene nodes.
+              , genemaps.at(gtree_index) // map to link species nodes with gene nodes.
               , alignment // alignment to compute the libpll likelihood
-              , params->costs_estimation,
-              params->dupcost // cost of one duplication event.
+              , dmatrix
+              , params->costs_estimation
+              , params->dupcost // cost of one duplication event.
               , params->losscost // cost of one loss event.
-              ,
-              supportThreshold // branch supports threshold to contract gene tree.
-              ,
-              params->strict_support_thresholds // contraction branch behaviour.
+              , supportThreshold // branch supports threshold to contract gene tree.
+              , params->strict_support_thresholds // contraction branch behaviour.
               , params->reroot or root_tree // re-root tree or not.
               , params->sample_size // number of outputs.
-              ,
-              params->add_ale_evaluation // add ALE log-likelihood evaluation in output.
-              ,
-              params->ale_selection // select best solution according to profileNJ cost and ALE log-likelihood.
-              ,
-              add_all_gene_losses_during_computations // add all artificial genes in gene trees.
+              , params->add_ale_evaluation // add ALE log-likelihood evaluation in output.
+              , params->ale_selection // select best solution according to profileNJ cost and ALE log-likelihood.
+              , add_all_gene_losses_during_computations // add all artificial genes in gene trees.
               , params->compute_distances // compute new branch lengths.
-              , printProgression and params->verbosity >=
-                                     Verbosity::NORMAL // print progression bar in standard output.
-              , params->verbosity >=
-                Verbosity::CHATTY // print all operations in standard output.
+              , printProgression and params->verbosity >= Verbosity::NORMAL // print progression bar in standard output.
+              , params->verbosity >= Verbosity::CHATTY // print all operations in standard output.
           );
 
       if (params->costs_estimation && params->verbosity >= Verbosity::NORMAL) {

@@ -44,7 +44,7 @@ std::unique_ptr<TreerecsParameters> ParseCommandLine(int argc, char** argv) {
   std::unique_ptr<TreerecsParameters> params(new TreerecsParameters());
 
   // Init option list (short and long)
-  char options[50] = "hvVYCMqrg:s:a:S:d:l:c:p:o:O:ft:n:N:";
+  char options[50] = "hvVYCMqrg:s:a:D:S:d:l:c:p:o:O:ft:n:N:";
   #if defined(_OPENMP)
   strcat(options, "P");
   #endif
@@ -57,6 +57,7 @@ std::unique_ptr<TreerecsParameters> ParseCommandLine(int argc, char** argv) {
       {"genetree",          required_argument, NULL,  'g'},
       {"speciestree",       required_argument, NULL,  's'},
       {"alignments",        no_argument,       NULL,  'a'},
+      {"dmatrix",           required_argument, NULL,  'D'},
       {"smap",              required_argument, NULL,  'S'},
       {"dupcost",           required_argument, NULL,  'd'},
       {"losscost",          required_argument, NULL,  'l'},
@@ -132,6 +133,11 @@ std::unique_ptr<TreerecsParameters> ParseCommandLine(int argc, char** argv) {
              << endl;
         exit(EXIT_FAILURE);
         #endif
+        break;
+      }
+      case 'D': {
+        params->functionalities.emplace(Functionalities::DMATRIX);
+        params->dmatrix_filename = std::string(optarg);
         break;
       }
       case 'S': {
@@ -420,6 +426,11 @@ void PrintHelp(char* prog_path) {
     "\t  * the paths to the multiple alignments (one per gene-tree)"
     << endl << endl;
 
+  cout << "   -D, --dmatrix MATRIX_FILE"
+    << endl <<
+    "\tinput distance matrix file. Will override brnach lengths as they are specified in the gene tree."
+    << endl << endl;
+
   cout << "   -S, --smap SMAP_FILE"
     << endl <<
     "\tinput gene-to-species mapping file."
@@ -620,6 +631,11 @@ void SummarizeParameters(
   // Alignments
   if (params->alignments_filename.size()) {
     os << "> Alignments file: " << params->alignments_filename << endl;
+  }
+
+  // Distance matrix
+  if (params->dmatrix_filename.size()) {
+    os << "> Distance matrix file: " << params->dmatrix_filename << endl;
   }
 
   // Mapping

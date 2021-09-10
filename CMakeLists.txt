@@ -101,6 +101,3 @@ enable_testing()
 # Add subdirectories
 add_subdirectory(ext)
 add_subdirectory(src)
-
-# Add 'tests' directory but don't build by default
-add_subdirectory(tests EXCLUDE_FROM_ALL)

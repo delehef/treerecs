@@ -305,29 +305,44 @@ IO::readDistanceMatrix(const std::string &filename, const bpp::PhyloTree &tree, 
   std::ifstream file(filename);
   try {
     if (not file.is_open()) {
-      //std::cerr << "Error in opening " << filename << std::endl;
       throw std::invalid_argument(filename + std::string(" does not exist."));
     }
   } catch(std::exception const& e) {
     std::cerr << "Error: " << e.what() << std::endl;
   }
 
-  // First line = node names
-  std::string line;
-  getline(file, line);
-  auto nodenames = utils::splitString(line, " ");
+  // First line - nodes count
+  std::string header;
+  getline(file, header);
+  size_t nb_nodes = std::stoi(header);
+
+  // Get the nodes names
   std::vector<std::shared_ptr<bpp::PhyloNode>> nodes;
-  for(auto& name: nodenames){
-    nodes.push_back(PhyloTreeToolBox::getNodeFromName(tree, name, true));
+  std::string line;
+  while(std::getline(file, line)) {
+    std::istringstream split(line);
+    std::string nodename;
+    split >> nodename;
+    nodes.push_back(PhyloTreeToolBox::getNodeFromName(tree, nodename, true));
   }
+  assert(nodes.size() == nb_nodes);
 
   // Initialize the matrix
-  Table<double, std::shared_ptr<bpp::PhyloNode>, std::shared_ptr<bpp::PhyloNode>> tab(nodenames.size(), nodenames.size(), 0.0);
+  Table<double, std::shared_ptr<bpp::PhyloNode>, std::shared_ptr<bpp::PhyloNode>> tab(nodes.size(), nodes.size(), 0.0);
   tab.setRowIndexes(nodes);
   tab.setColIndexes(nodes);
 
-  // Fill the matrix
+  // Go back to the start to parse the actual values
+  file.clear();
+  file.seekg(0);
+
+  // Skip header
+  std::string dev_null;
+  getline(file, dev_null);
+
+  // Read the numbers
   for(std::size_t i = 0; i < nodes.size(); i++){
+    file >> dev_null;
     for(std::size_t j = 0; j < nodes.size(); j++){
       file >> std::setprecision(5) >> tab(nodes[i], nodes[j]);
     }

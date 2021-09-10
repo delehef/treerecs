@@ -93,8 +93,9 @@ std::pair<Node, Node> NeighborJoining::findPairMinimizingQ(
   for(auto gl: sl_genes){
     //auto d_gl_sum = sum_of_distances(D, gl);
     auto d_gl_sum = 0.0;
-    if(not PhyloTreeToolBox::isArtificalGene(gl))
+    if(not PhyloTreeToolBox::isArtificalGene(gl)) {
       d_gl_sum = utils::sum(D.getRow(gl));
+    }
     for(auto gr: sr_genes){
       if(gl != gr) {
         double qvalue;
@@ -214,4 +215,3 @@ void NeighborJoining::operator()(bpp::PhyloTree &tree, DistanceMatrix dmatrix) c
 }
 
 } // namespace treerecs
-

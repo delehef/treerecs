@@ -43,6 +43,7 @@ enum class Functionalities {
   RESOLVING,
   REROOTING,
   CORRECTION,
+  DMATRIX,
   COST_ESTIMATION,
   ALE_LIKELIHOOD,
   ALE_SELECTION,
@@ -72,6 +73,8 @@ class TreerecsParameters {
   std::string speciestree_filename;
   /// Filename with per-gene-family alignements paths
   std::string alignments_filename;
+  /// Filename with distance matrix overriding tree annotations
+  std::string dmatrix_filename;
   /// Gene<->species mapping filename
   std::string map_filename;
 

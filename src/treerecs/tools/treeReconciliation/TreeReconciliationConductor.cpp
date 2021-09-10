@@ -17,6 +17,7 @@
 
 #include <treerecs/tools/ALE/ALEevaluation.h>
 #include <treerecs/tools/Statistics.h>
+#include <optional>
 
 namespace treerecs {
 
@@ -25,6 +26,7 @@ std::vector<ReconciledRootedTree> TreeReconciliationConductor::operator()(
     const bpp::PhyloTree &speciestree,
     const SpeciesGeneMap &original_map,
     const LibpllAlignmentInfo *alignmentInfo,
+    const std::optional<std::string> dmatrix,
     bool estimate_costs,
     const double duplication_cost,
     const double loss_cost,
@@ -43,6 +45,7 @@ std::vector<ReconciledRootedTree> TreeReconciliationConductor::operator()(
                            speciestree,
                            original_map,
                            alignmentInfo,
+                           dmatrix,
                            duplication_cost,
                            loss_cost,
                            supportThreshold,
@@ -60,6 +63,7 @@ std::vector<ReconciledRootedTree> TreeReconciliationConductor::operator()(
                      speciestree,
                      original_map,
                      alignmentInfo,
+                     dmatrix,
                      duplication_cost,
                      loss_cost,
                      supportThreshold,
@@ -78,6 +82,7 @@ std::vector<ReconciledRootedTree> TreeReconciliationConductor::costEstimations(
     const bpp::PhyloTree &original_genetree, const bpp::PhyloTree &speciestree
     , const SpeciesGeneMap &original_map
     , const LibpllAlignmentInfo *alignmentInfo
+    , const std::optional<std::string> dmatrix
     , const double duplication_cost
     , const double loss_cost, const double supportThreshold
     , const bool contraction_inferior_than_threshold_only, const bool reroot
@@ -109,7 +114,7 @@ std::vector<ReconciledRootedTree> TreeReconciliationConductor::costEstimations(
   while(while_iteration < while_max_guard) {
 
     auto reconciledTrees = reconcile(
-      original_genetree, speciestree, original_map, alignmentInfo
+      original_genetree, speciestree, original_map, alignmentInfo, dmatrix
       , current_dupcost, current_losscost, supportThreshold
       , contraction_inferior_than_threshold_only, reroot , sample_size
       , compute_ale_loglk, keep_max_ale_loglk, add_loss_events
@@ -162,6 +167,7 @@ std::vector<ReconciledRootedTree> TreeReconciliationConductor::reconcile(
     const bpp::PhyloTree& speciestree,
     const SpeciesGeneMap& original_map,
     const LibpllAlignmentInfo *alignmentInfo,
+    const std::optional<std::string> _dmatrix,
     const double duplication_cost,
     const double loss_cost,
     const double supportThreshold,
@@ -179,11 +185,19 @@ std::vector<ReconciledRootedTree> TreeReconciliationConductor::reconcile(
   ReconciledRootedTreeGenerator recgen;
 
   // Compute distance matrix
-  DistanceMatrix dmatrix = PhyloTreeToolBox::distanceMatrix(
-      original_genetree, true, printProgression);
+  DistanceMatrix dmatrix;
+  if (_dmatrix.has_value()) {
+    dmatrix = IO::readDistanceMatrix(_dmatrix.value(), original_genetree, verbose);
+  } else {
+    dmatrix = PhyloTreeToolBox::distanceMatrix(original_genetree, true, printProgression);
+  }
 
-  if(verbose)
+  if(verbose) {
+    if (_dmatrix.has_value()) {
+        std::cout << "Overriding tree distances with given distance matrix file" << std::endl;
+    }
     std::cout << "Distance matrix:" << std::endl << dmatrix << std::endl;
+  }
 
   // Clone genetree
   std::shared_ptr<bpp::PhyloTree> genetree =

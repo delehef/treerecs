@@ -27,6 +27,7 @@
 #include "utils.h"
 #include "Timer.h"
 #include "treerecs/tools/IO/RefreshablePrinter.h"
+#include <treerecs/tools/IO/IO.h>
 
 namespace treerecs {
 

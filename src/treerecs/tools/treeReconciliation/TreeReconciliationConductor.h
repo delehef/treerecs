@@ -55,6 +55,7 @@ class TreeReconciliationConductor {
       , const bpp::PhyloTree& speciestree
       , const SpeciesGeneMap& original_map
       , const LibpllAlignmentInfo *alignmentInfo
+      , const std::optional<std::string> dmatrix
       , bool estimate_costs
       , const double duplication_cost
       , const double loss_cost
@@ -82,6 +83,7 @@ class TreeReconciliationConductor {
       const bpp::PhyloTree& speciestree,
       const SpeciesGeneMap& original_map,
       const LibpllAlignmentInfo *alignmentInfo,
+      const std::optional<std::string> _dmatrix,
       const double duplication_cost,
       const double loss_cost,
       const double supportThreshold,
@@ -118,6 +120,7 @@ class TreeReconciliationConductor {
       , const bpp::PhyloTree& speciestree
       , const SpeciesGeneMap& original_map
       , const LibpllAlignmentInfo *alignmentInfo
+      , const std::optional<std::string> dmatrix
       , const double duplication_cost
       , const double loss_cost
       , const double supportThreshold = 0.0

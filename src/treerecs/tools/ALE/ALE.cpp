@@ -754,6 +754,7 @@ void approx_posterior::decompose(string G_string, set<int> *bip_ids, scalar_type
       for (std::size_t i = 1; i < root_sons.size(); i++) {
         std::shared_ptr<bpp::PhyloBranch> new_branch(new bpp::PhyloBranch());
         if(PhyloTreeToolBox::hasDistanceBetweenTwoNodes(root_sons.front(), root_sons.at(i), *G)) {
+          // TODO Fix for custom distance matrices
           double distance = PhyloTreeToolBox::getDistanceBetweenTwoNodes(root_sons.front(), root_sons.at(i), *G);
           new_branch->setLength(distance);
         }
