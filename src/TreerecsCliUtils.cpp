@@ -56,7 +56,7 @@ std::unique_ptr<TreerecsParameters> ParseCommandLine(int argc, char** argv) {
       {"superverbose",      no_argument,       NULL,  'Y'},
       {"genetree",          required_argument, NULL,  'g'},
       {"speciestree",       required_argument, NULL,  's'},
-      {"alignments",        no_argument,       NULL,  'a'},
+      {"alignments",        required_argument, NULL,  'a'},
       {"dmatrix",           required_argument, NULL,  'D'},
       {"smap",              required_argument, NULL,  'S'},
       {"dupcost",           required_argument, NULL,  'd'},
